@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <form action="/register" method="POST" class="vertical_form">
+        <div>
+            <input autocomplete="off" name="username" placeholder="Username" type="text">
+        </div>
+        <div>
+            <input autocomplete="new-password" name="password" placeholder="password" type="password">
+        </div>
+        <div>
+            <input autocomplete="new-password" name="confirmation" placeholder="repeat password" type="password">
+        </div>
+        <input type="submit">
+        <p style="margin-top:10px;">Required at least 8 chars, one number, one uppercase letter and one symbol<\p>
+    </form>
+{% endblock %}

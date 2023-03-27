@@ -1,0 +1,71 @@
+/* Size for brand */
+nav .navbar-brand
+{
+    font-size: xx-large;
+}
+
+/* Colors for brand */
+nav .navbar-brand .blue
+{
+    color: #537fbe;
+}
+nav .navbar-brand .red
+{
+    color: #ea433b;
+}
+nav .navbar-brand .yellow
+{
+    color: #f5b82e;
+}
+nav .navbar-brand .green
+{
+    color: #2e944b;
+}
+
+.vertical_form div{
+    padding: 2px
+}
+
+.section {
+    padding-bottom: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 0.5rem;
+    text-align: center;
+}
+
+table {
+    background-color: transparent;
+    margin-bottom: 1rem;
+    margin: auto;
+    width: 80%;
+}
+
+table th,
+table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+tbody tr:nth-of-type(odd) {
+    background-color: rgb(179, 208, 255, 0.3);
+}
+
+.centered{
+    text-align: right;
+    font-weight: bold;
+}
+
+.sidebar{
+    top: 0;
+    left: 0;
+    width: 225px;
+    height: 400px;
+    padding: 20px 0;
+    transition: all 0.5s ease;
+}
+
+.privateAreaButton{
+    padding: 30px;
+    border: None;
+}

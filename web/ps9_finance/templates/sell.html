@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sell
+{% endblock %}
+
+{% block main %}
+    <form action="/sell" method="POST" class="vertical_form">
+        <div>
+            <select name="symbol" id="symbol">
+                <option disabled selected>Symbol</option>
+                {% for stock in stocks %}
+                    <option value="{{ stock.symbol }}" id="{{ stock.symbol }}"">{{ stock.symbol }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <input autocomplete="off" name="shares" placeholder="#shares" type="number" min="1" id="shares" style="width:100px">
+        </div>
+        <button type="submit">Sell</button>
+        <script>
+            numberSelector = document.querySelector('#shares');
+            document.querySelector('#symbol').addEventListener('change', function(){
+                var max;
+                {{ stocks|safe }}.forEach(stock => max = (stock.symbol == this.value ? stock.shares : max));
+                numberSelector.max=max;
+            });
+        </script>
+    </form>
+{% endblock %}

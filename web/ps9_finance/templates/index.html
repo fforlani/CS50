@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+<table class="section">
+    <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Name</th>
+            <th>Shares</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+        <tr>
+            <td>{{ row.symbol }}</td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.shares }}</td>
+            <td>{{ usd(row.currentPrice) }}</td>
+            <td>{{ usd(row.currentPrice*row.shares) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td class="centered" colspan="4">Cash</td>
+            <td>{{ usd(cash) }}</td>
+        </tr>
+        <tr>
+            <td class="centered" colspan="4">TOTAL</td>
+            <td>{{ usd(total(cash, data)) }}</td>
+        </tr>
+    </tfoot>
+</table>
+{% endblock %}

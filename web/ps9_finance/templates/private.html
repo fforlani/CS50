@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Personal Area
+{% endblock %}
+
+{% block main %}
+    <div>
+        <div class="sidebar" style="display: inline-block; float:left; border-right: thick solid #000000;">
+            <div>
+                <button type="button" class="privateAreaButton" id="cash">Add cash</button>
+            </div>
+            <div>
+                <button type="button" class="privateAreaButton" id="reset">Change password</button>
+            </div>
+        </div>
+        <div style="display: inline-block; margin-top:50px;" id="content">Welcome to your private area!</div>
+    </div>
+    <script>
+        var content = document.querySelector('#content');
+        var cashArea = '<form action="/private" method="POST" class="vertical_form">\
+                <div>\
+                    <input name="amount" placeholder="Amount" type="number" min="1">\
+                </div>\
+                <button type="submit" name="button" value="cash">Add</button>\
+            </form>';
+        var resetArea = '<form action="/private" method="POST" class="vertical_form" autocomplete="false">\
+                <div>\
+                    <input autocomplete="off" name="oldPassword" placeholder="Current password" type="text">\
+                </div>\
+                <div>\
+                    <input autocomplete="new-password" name="newPassword" placeholder="New password" type="password">\
+                </div>\
+                <div>\
+                    <input autocomplete="new-password" name="confirmation" placeholder="Repeat password" type="password">\
+                </div>\
+                <button type="submit" name="button" value="reset">Change</button>\
+            </form>\
+            <p style="margin-top:10px;">Required at least 8 chars, one number, one uppercase letter and one symbol<\p>';
+        document.querySelector('#cash').addEventListener('click', function(){
+            content.innerHTML = cashArea;
+        });
+        document.querySelector('#reset').addEventListener('click', function(){
+            content.innerHTML = resetArea;
+        });
+    </script>
+{% endblock %}
