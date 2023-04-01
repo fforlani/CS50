@@ -6,11 +6,20 @@ class Node():
 
 
 class StackFrontier():
-    def __init__(self):
+    def __init__(self, target):
         self.frontier = []
+        self.target = target
+        self.visitedStates = []
+
+    def isAlredyVisited(self, newState):
+        return newState in self.visitedStates
 
     def add(self, node):
+        if self.isAlredyVisited(node.state):
+            return False
+        self.visitedStates.append(node.state)
         self.frontier.append(node)
+        return node.state == self.target
 
     def contains_state(self, state):
         return any(node.state == state for node in self.frontier)

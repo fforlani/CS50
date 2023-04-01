@@ -94,24 +94,28 @@ def shortest_path(source, target):
     if source == target:
         return []
     # initializing the problem
-    queue = QueueFrontier()
+    queue = QueueFrontier(target)
+    head = Node(source, None, None)
+    queue.add(head)
     for neighbor in neighbors_for_person(source):
-        queue.add(Node(neighbor[1], source, neighbor[0]))
+        if queue.add(Node(neighbor[1], head, neighbor[0])):
+            return getPath(Node(neighbor[1], head, neighbor[0]), source)
     if queue.empty(): #if the source is not in any film
         return None
 
     while not queue.empty():
         current = queue.remove()
-        if current.state == target:
-            path = []
-            while current.parent != source:
-                path.append((current.state, current.action))
-                current = current.parent
-            path.append((current.action, current.state))
-            return path[::-1]
         for neighbor in neighbors_for_person(current.state):
-            queue.add(Node(neighbor[1], current, neighbor[0]))
+            if queue.add(Node(neighbor[1], current, neighbor[0])):
+                return getPath(Node(neighbor[1], current, neighbor[0]), source)
     return None
+
+def getPath(current, source):
+    path = []
+    while current.state != source:
+        path.append((current.action, current.state))
+        current = current.parent
+    return path[::-1]
 
 
 def person_id_for_name(name):
