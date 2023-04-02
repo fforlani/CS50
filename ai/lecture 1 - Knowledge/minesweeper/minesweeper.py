@@ -101,6 +101,8 @@ class Sentence():
     def __str__(self):
         return f"{self.cells} = {self.count}"
 
+    # The following methods were defined in the problem but I do not find them useful
+
     # def known_mines(self):
     #     """
     #     Returns the set of all cells in self.cells known to be mines.
@@ -127,7 +129,6 @@ class Sentence():
         if cell in self.cells:
             self.cells.remove(cell)
             self.count -= 1
-        #     self.cells[cell] = 1
 
     def mark_safe(self, cell):
         """
@@ -136,7 +137,6 @@ class Sentence():
         """
         if cell in self.cells:
             self.cells.remove(cell)
-        #     self.cells[cell] = 0
 
 depth = 0
 class MinesweeperAI():
@@ -151,7 +151,7 @@ class MinesweeperAI():
         self.width = width
 
         # Keep track of which cells have been clicked on
-        self.moves_made = OrderedDict()
+        self.moves_made = []
 
         # Keep track of cells known to be safe or mines
         self.mines = set()
@@ -165,6 +165,7 @@ class MinesweeperAI():
         Marks a cell as a mine, and updates all knowledge
         to mark that cell as a mine as well.
         """
+        # I have to remove the sentences when empty otherwise i could enter an infinite loop when updating knowledge
         self.mines.add(cell)
         sentences = self.knowledge.copy()
         for sentence in sentences:
@@ -178,6 +179,7 @@ class MinesweeperAI():
         Marks a cell as safe, and updates all knowledge
         to mark that cell as safe as well.
         """
+        # I have to remove the sentences when empty otherwise i could enter an infinite loop when updating knowledge
         self.safes.add(cell)
         sentences = self.knowledge.copy()
         for sentence in sentences:
@@ -200,13 +202,11 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
-        self.moves_made[cell] = count
+        self.moves_made.append(cell)
         self.safes.add(cell)
         neighbours = self.getNeighbours(cell)
         sentence = Sentence(neighbours, count)
-        # if not self.sentenceInKnowledge(sentence, self.knowledge):
         self.knowledge.append(sentence)
-        depth = 0
         self.updateKnowledge(self.knowledge, sentence)
 
     def make_safe_move(self):
@@ -218,7 +218,7 @@ class MinesweeperAI():
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
         """
-        safeMoves = self.safes.difference(self.moves_made.keys())
+        safeMoves = self.safes.difference(self.moves_made)
         if len(safeMoves) > 0:
             move = next(iter(safeMoves))
             print(move)
@@ -232,12 +232,10 @@ class MinesweeperAI():
             1) have not already been chosen, and
             2) are not known to be mines
         """
+        # I set the first move as a standard one. I prefer to start in the corner so there are less chances to find a mine
         if len(self.moves_made) == 0:
-            return (4, 4)
-        # for move in self.moves_made.keys():
-        #     for neighbour in self.getNeighbours(move):
-        #         if neighbour not in self.moves_made.keys():
-        #             return neighbour
+            return (0,0)
+
         allMoves = set((i, j) for i in range(self.height) for j in range(self.width))
         allMoves = allMoves.difference(self.moves_made).difference(self.mines)
         if len(allMoves) > 0:
@@ -260,9 +258,7 @@ class MinesweeperAI():
         return [neighbour for neighbour in neighbours if neighbour not in self.moves_made]
 
     def updateSentence(self, sentence):
-        # if self.sentenceInKnowledge(sentence, self.knowledge):
-        #     self.knowledge.remove(sentence)
-        #     return
+        # since mark_safe and mark_mine remove a cell from sentence i have to iterate over a copy
         if sentence.count == 0:
             nieghbours = sentence.cells.copy()
             for neighbour in nieghbours:
@@ -275,10 +271,7 @@ class MinesweeperAI():
                 self.mark_mine(neighbour)
 
     def updateKnowledge(self, knowledge, newSentence):
-        global depth
-        depth +=1
-        if depth > 100:
-            print("")
+        # first of all i remove the known cells from the sentence to reduce the size of it
         for safe in self.safes:
             if safe in newSentence.cells:
                 newSentence.cells.remove(safe)
@@ -302,10 +295,3 @@ class MinesweeperAI():
                 if len(sentence.cells) == 0:
                     return
                 self.updateKnowledge(knowledge, sentence)
-
-
-    # def sentenceInKnowledge(self, sentence, knowledge):
-    #     for sent in knowledge:
-    #         if sent.cells == sentence.cells:
-    #             return True
-    #     return False
