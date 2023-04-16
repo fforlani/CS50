@@ -2,6 +2,7 @@ import sys
 
 from crossword import *
 import copy
+import timeit
 
 
 class CrosswordCreator:
@@ -212,15 +213,18 @@ class CrosswordCreator:
         if self.assignment_complete(assignment):
             return assignment
         var = self.select_unassigned_variable(assignment)
+        # In order to apply arc consistency after assigning a value to a variable i need to copy the domains:
+        # if the solution is not found i can restore the domain to its original value
+        originalDomain = copy.deepcopy(self.domains)
         for word in self.order_domain_values(var, assignment):
-            copied = copy.deepcopy(assignment)
-            copied[var] = word
-            # I'm not applying arc consistency, so the efficiency is decreased. But i believe that i should change the program structure
-            # in order to being able to apply it. In fact i would need to modify self.domains each time, and so it should be deepcopied
-            # which is not allowed now.
-            sol = self.backtrack(copied)
+            assignment[var] = word
+            self.domains[var] = [word]
+            self.ac3()
+            sol = self.backtrack(assignment)
             if sol is not None:
                 return sol
+            self.domains = copy.deepcopy(originalDomain)
+        assignment.pop(var)
 
 
 def main():
@@ -236,6 +240,7 @@ def main():
     # Generate crossword
     crossword = Crossword(structure, words)
     creator = CrosswordCreator(crossword)
+    print(timeit.timeit(lambda : creator.solve(), number=5))
     assignment = creator.solve()
 
     # Print result
