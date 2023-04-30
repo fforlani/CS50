@@ -15,7 +15,7 @@ V -> "arrived" | "came" | "chuckled" | "had" | "lit" | "said" | "sat"
 V -> "smiled" | "tell" | "were"
 """
 
-# I found the following sentence construction online
+# I found the following sentence construction online, i do not haveenough language knowledge
 NONTERMINALS = """
 S -> NP Pred | S ConjP
 Pred ->  Adv Pred | VP | Pred Adv
